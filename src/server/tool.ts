@@ -1,7 +1,7 @@
 import type { AlertsResponse, ForecastPeriod, ForecastResponse, PointsResponse } from "../types/response"
 import { z } from "zod" // 用于参数校验的库
 import { makeNWSRequest, NWS_API_BASE } from "./api"
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js"
+import { McpServer, ResourceTemplate } from "@modelcontextprotocol/sdk/server/mcp.js"
 
 // 创建 MCP 服务器实例
 export const server = new McpServer({
@@ -111,3 +111,27 @@ server.tool(
     }
   },
 )
+
+server.resource("test-resource", new ResourceTemplate("test://{id}", { list: undefined }), async (uri, { id }) => ({
+  contents: [
+    {
+      uri: uri.href,
+      text: `测试结果 ID: ${id}`,
+    },
+  ],
+}))
+
+// 添加提示词的工具
+server.prompt("translate", "进行翻译的 prompt", { message: z.string() }, ({ message }) => {
+  return {
+    messages: [
+      {
+        role: "user",
+        content: {
+          type: "text",
+          text: `请将下面的话语翻译成中文：${message}`,
+        },
+      },
+    ],
+  }
+})

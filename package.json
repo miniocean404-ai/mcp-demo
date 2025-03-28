@@ -8,7 +8,7 @@
     "build"
   ],
   "scripts": {
-    "dev": "tsx watch src/index.ts",
+    "dev": "pnpx @modelcontextprotocol/inspector tsx src/index.ts",
     "build": "tsc"
   },
   "keywords": [],

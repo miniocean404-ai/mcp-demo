@@ -58,6 +58,7 @@ class MCPClient {
 
     // 获取服务器暴露的工具信息
     const toolsResult = await this.mcp.listTools()
+
     this.tools = toolsResult.tools.map((tool: any) => ({
       name: tool.name,
       description: tool.description,
